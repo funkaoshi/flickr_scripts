@@ -1,9 +1,11 @@
 require 'flickraw'
 
+# Prefix for the machine tags generated. I use my username, funkaoshi
+MACHINE_TAG = 'funkaoshi'
+
 # Read API key from yaml file. The file auth.yml should be:
 # :key: API_KEY
 # :secret: SHARED_SECRET
-# :machine_tag: PREFIX_FOR_MACHINE_TAGS (I use my username, funkaoshi)
 user_data = YAML::load_file(File.dirname(__FILE__) + '/auth.yml')
 
 FlickRaw.api_key = user_data[:key]
@@ -40,10 +42,11 @@ count = 0
 photos.each do |photo|
   if photo.title =~ /Roll ([0-9]*) - (.*) - (.*) - (.*) - (.*)/
     count = count + 1
-    puts "Updating photograph - #{photo.title}"
-    tags = "#{user_data[:machine_tag]}:roll=%s #{user_data[:machine_tag]}:date=\"%s\" %s \"%s\" #{user_data[:machine_tag]}:id=%s" % $~[1..5]
+    puts "Updating: #{photo.title}"
+    tags = "#{MACHINE_TAG}:roll=%s #{MACHINE_TAG}:date=\"%s\" %s \"%s\" #{MACHINE_TAG}:id=%s" % $~[1..5]
     flickr.photos.setTags( :photo_id => photo.id, :tags => tags)
     flickr.photos.setMeta( :photo_id => photo.id, :title => '', :description => '' )
   end
 end
-puts "Updated #{count} photographs."
+puts "Updated #{count} photographs on #{Time.now.strftime('%D (%T)')}."
+puts "---"
