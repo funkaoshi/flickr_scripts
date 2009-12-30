@@ -3,19 +3,24 @@ require 'flickraw'
 # Prefix for the machine tags generated. I use my username, funkaoshi
 MACHINE_TAG = 'funkaoshi'
 
-# Read API key from yaml file. The file auth.yml should be:
+AUTH_FILE = File.dirname(__FILE__) + '/auth.yml'
+
+# Read API key from yaml file. The file auth.yml should contain
+# the key and secret fields from your API key page. We will also 
+# save the auth token Flickr sends us in this file once we have 
+# authenticated. To start, create a file with the following:
 # :key: API_KEY
 # :secret: SHARED_SECRET
-user_data = YAML::load_file(File.dirname(__FILE__) + '/auth.yml')
+auth_data = YAML::load_file(AUTH_FILE)
 
-FlickRaw.api_key = user_data[:key]
-FlickRaw.shared_secret = user_data[:secret]
+FlickRaw.api_key = auth_data[:key]
+FlickRaw.shared_secret = auth_data[:secret]
 
 # Authenticate at Flickr, unless we have already done so and saved the 
 # authentication token to the disk.
 auth = nil
-if File.exists?("flickr_auth_token")
-  auth = flickr.auth.checkToken :auth_token => File.read('flickr_auth_token')
+if auth_data.include?(:token)
+  auth = flickr.auth.checkToken :auth_token => auth_data[:token]
 else
   frob = flickr.auth.getFrob
   auth_url = FlickRaw.auth_url :frob => frob, :perms => 'write'
@@ -30,7 +35,8 @@ else
   rescue FlickRaw::FailedResponse => e
     puts "Authentication failed : #{e.msg}"
   end
-  File.open('flickr_auth_token', 'w') { |f| f.write(auth.token) }
+  auth_data[:token] = auth.token
+  File.open(AUTH_FILE, 'w') { |f| YAML.dump(auth_data, f) }
 end
 
 # load the users recent photos from Flickr
