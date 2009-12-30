@@ -1,0 +1,11 @@
+This is a script I use to generate some tags for my photos on Flickr using the
+name of the image. When I save my film photo scans, I name them as follow: 
+
+  Roll XX - DATE_SCANNED - CAMERA - FILM - UNIQUE_ID
+
+I take this name and turn it into the following set of tags:
+
+  MACHINE_TAG:roll=%s MACHINE_TAG:date="DATE" CAMERA FILM MACHINE_TAG:id=UNIQUE_ID
+  
+This is probably way too niche to be useful to anyone else, but might serve as
+an example of how to use Flickraw, which is fucking awesome.
