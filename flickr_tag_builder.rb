@@ -3,14 +3,16 @@ require 'flickraw'
 # Prefix for the machine tags generated. I use my username, funkaoshi
 MACHINE_TAG = 'funkaoshi'
 
-AUTH_FILE = File.dirname(__FILE__) + '/auth.yml'
-
-# Read API key from yaml file. The file auth.yml should contain
+# Read API key from a yaml file. The file auth.yml should contain
 # the key and secret fields from your API key page. We will also 
 # save the auth token Flickr sends us in this file once we have 
 # authenticated. To start, create a file with the following:
-# :key: API_KEY
-# :secret: SHARED_SECRET
+#
+#   ---
+#   :key: API_KEY
+#   :secret: SHARED_SECRET
+#
+AUTH_FILE = File.dirname(__FILE__) + '/auth.yml'
 auth_data = YAML::load_file(AUTH_FILE)
 
 FlickRaw.api_key = auth_data[:key]
@@ -50,7 +52,7 @@ photos.each do |photo|
     count = count + 1
     puts "Updating: #{photo.title}"
     tags = "#{MACHINE_TAG}:roll=%s #{MACHINE_TAG}:date=\"%s\" %s \"%s\" #{MACHINE_TAG}:id=%s" % $~[1..5]
-    flickr.photos.setTags( :photo_id => photo.id, :tags => tags)
+    flickr.photos.setTags( :photo_id => photo.id, :tags => tags )
     flickr.photos.setMeta( :photo_id => photo.id, :title => '', :description => '' )
   end
 end
