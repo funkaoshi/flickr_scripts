@@ -20,7 +20,6 @@ FlickRaw.shared_secret = auth_data[:secret]
 
 # Authenticate at Flickr, unless we have already done so and saved the 
 # authentication token to the disk.
-auth = nil
 if auth_data.include?(:token)
   auth = flickr.auth.checkToken :auth_token => auth_data[:token]
 else
