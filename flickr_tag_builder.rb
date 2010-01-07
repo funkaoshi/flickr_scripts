@@ -1,44 +1,25 @@
+# This is a script I use to generate some tags for my photos on Flickr using the
+# name of the image. When I save my film scans, I name them as follow: 
+# 
+#   Roll XX - DATE_SCANNED - CAMERA - FILM - UNIQUE_ID.jpg
+# 
+# When these files are uploaded to Flickr, their titles become:
+# 
+#   Roll XX - DATE_SCANNED - CAMERA - FILM - UNIQUE_ID
+# 
+# I take this name and turn it into the following set of tags and clear out the
+# title and description.
+# 
+#   MACHINE_TAG:roll=XX MACHINE_TAG:date="DATE" CAMERA FILM MACHINE_TAG:id=UNIQUE_ID
+
 require 'flickraw'
+require 'flickr_auth.rb'
 
 # Prefix for the machine tags generated. I use my username, funkaoshi
 MACHINE_TAG = 'funkaoshi'
 
-# Read API key from a yaml file. The file auth.yml should contain
-# the key and secret fields from your API key page. We will also 
-# save the auth token Flickr sends us in this file once we have 
-# authenticated. To start, create a file with the following:
-#
-#   ---
-#   :key: API_KEY
-#   :secret: SHARED_SECRET
-#
-AUTH_FILE = File.dirname(__FILE__) + '/auth.yml'
-auth_data = YAML::load_file(AUTH_FILE)
-
-FlickRaw.api_key = auth_data[:key]
-FlickRaw.shared_secret = auth_data[:secret]
-
-# Authenticate at Flickr, unless we have already done so and saved the 
-# authentication token to the disk.
-if auth_data.include?(:token)
-  auth = flickr.auth.checkToken :auth_token => auth_data[:token]
-else
-  frob = flickr.auth.getFrob
-  auth_url = FlickRaw.auth_url :frob => frob, :perms => 'write'
-
-  puts "Open this url in your process to complete the authication process : #{auth_url}"
-  puts "Press Enter when you are finished."
-  STDIN.getc
-
-  begin
-    auth = flickr.auth.getToken :frob => frob
-    puts "Authenticated as #{auth.user.username}"
-  rescue FlickRaw::FailedResponse => e
-    puts "Authentication failed : #{e.msg}"
-  end
-  auth_data[:token] = auth.token
-  File.open(AUTH_FILE, 'w') { |f| YAML.dump(auth_data, f) }
-end
+# authorize at flickr, loading auth data from yaml file.
+auth = FlickrAuth.new('auth.yml')
 
 # load the users recent photos from Flickr
 photos = flickr.photos.search( :user_id => auth.user.nsid )
