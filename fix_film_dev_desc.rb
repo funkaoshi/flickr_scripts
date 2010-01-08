@@ -1,7 +1,5 @@
 # This is a script that will append a link to the filmdev.org recipe that
-# describes how a black and white roll I shot was developed. This currently
-# examines more photos than it really should. Should probably tag what i've
-# processed, or store the last update date locally.
+# describes how a black and white roll I shot was developed.
 
 require 'flickraw'
 require 'flickr_auth.rb'
@@ -19,15 +17,10 @@ photos = flickr.photos.search(:user_id => auth.user.nsid,
 count = 0
 photos.each do |photo|
   info = flickr.photos.getInfo( :photo_id => photo.id )
-  unless info.description =~ /filmdev.org/
-    if photo.machine_tags =~ /filmdev:recipe=(\d+)/
-      count += 1
-      puts "Updating: #{photo.title}"
-      description = "#{info.description}"
-      description += ' ' unless description.empty?
-      description += "<a href='http://filmdev.org/recipe/show/#{$~[1]}'>Development details on FilmDev</a>"
-      flickr.photos.setMeta( :photo_id => photo.id, :title => info.title, :description => description )
-    end
+  if  info.description =~ /\\n\\n/
+    puts "Updating: #{photo.title}"
+    description = info.description.gsub(/\\n\\n/, ' ')
+    flickr.photos.setMeta( :photo_id => photo.id, :title => info.title, :description => description )
   end
 end
 puts "Updated #{count} photographs on #{Time.now.strftime('%D (%T)')}."

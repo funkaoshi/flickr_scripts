@@ -48,6 +48,6 @@ class FlickrAuth
         puts "Authentication failed : #{e.msg}"
       end
     end
+    @auth
   end
 end
-
