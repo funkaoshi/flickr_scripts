@@ -7,26 +7,25 @@ require 'flickraw'
 require 'flickr_auth.rb'
 
 # authorize with Flickr
-auth = FlickrAuth.new('auth.yml')
+auth = FlickrAuth.new('auth.yml', 'write')
 
 # load the users recent photos from Flickr
 photos = flickr.photos.search(:user_id => auth.user.nsid, 
                               :machine_tags => 'filmdev:recipe=',
-                              :extras => 'machine_tags' )
+                              :extras => 'machine_tags, description' )
 
 # For each photo named with film information, append link to the 
 # filmdev site's recipe page.
 count = 0
 photos.each do |photo|
-  info = flickr.photos.getInfo( :photo_id => photo.id )
-  unless info.description =~ /filmdev.org/
+  unless photo.description =~ /filmdev.org/
     if photo.machine_tags =~ /filmdev:recipe=(\d+)/
       count += 1
       puts "Updating: #{photo.title}"
-      description = "#{info.description}"
-      description += ' ' unless description.empty?
+      description = "#{photo.description}"
+      description += "\n\n" unless description.empty?
       description += "<a href='http://filmdev.org/recipe/show/#{$~[1]}'>Development details on FilmDev</a>"
-      flickr.photos.setMeta( :photo_id => photo.id, :title => info.title, :description => description )
+      flickr.photos.setMeta( :photo_id => photo.id, :title => photo.title, :description => description )
     end
   end
 end

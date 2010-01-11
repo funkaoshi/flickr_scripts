@@ -19,7 +19,7 @@ require 'flickr_auth.rb'
 MACHINE_TAG = 'funkaoshi'
 
 # authorize at flickr, loading auth data from yaml file.
-auth = FlickrAuth.new('auth.yml')
+auth = FlickrAuth.new('auth.yml', 'write')
 
 # load the users recent photos from Flickr
 photos = flickr.photos.search( :user_id => auth.user.nsid )

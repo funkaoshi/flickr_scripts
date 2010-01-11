@@ -1,10 +1,13 @@
 require 'flickraw'
 
+# Encapsulates connecting to flickr, pulling auth information from a yaml file.
+# A FlickrAuth object should behave the same way (more or less) as an auth object
+# returned by FlickRaw.
 class FlickrAuth  
   attr_reader :auth
 
-  def initialize(file)
-    @auth = authorize(file)
+  def initialize(file, perms='read')
+    @auth = authorize(file, perms)
   end
 
   def token; @auth.token end
@@ -20,7 +23,8 @@ class FlickrAuth
   #   :key: API_KEY
   #   :secret: SHARED_SECRET
   #
-  def authorize(file)
+  # @auth will be nill if authentication fails.
+  def authorize(file, perms)
     auth_file = File.dirname(__FILE__) + '/' + file
     auth_data = YAML::load_file(auth_file)
 
@@ -33,7 +37,7 @@ class FlickrAuth
       @auth = flickr.auth.checkToken :auth_token => auth_data[:token]
     else
       frob = flickr.auth.getFrob
-      auth_url = FlickRaw.auth_url :frob => frob, :perms => 'write'
+      auth_url = FlickRaw.auth_url :frob => frob, :perms => perms
 
       puts "Open this url in your process to complete the authication process : #{auth_url}"
       puts "Press Enter when you are finished."
