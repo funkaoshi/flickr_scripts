@@ -1,4 +1,7 @@
+# # FlickrAuth
+
 require 'flickraw'
+require 'yaml'
 
 # Encapsulates connecting to flickr, pulling auth information from a yaml file.
 # A FlickrAuth object should behave the same way (more or less) as an auth object
@@ -19,9 +22,8 @@ class FlickrAuth
   # save the auth token Flickr sends us in this file once we have 
   # authenticated. To start, create a file with the following:
   #
-  #   ---
-  #   :key: API_KEY
-  #   :secret: SHARED_SECRET
+  #     :key: API_KEY
+  #     :secret: SHARED_SECRET
   #
   # @auth will be nill if authentication fails.
   def authorize(file, perms)
