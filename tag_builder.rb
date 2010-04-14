@@ -1,3 +1,5 @@
+#!/usr/bin/ruby
+
 # This is a script I use to generate some tags for my photos on Flickr using the
 # name of the image. When I save my film scans, I name them as follow: 
 # 
