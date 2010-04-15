@@ -3,8 +3,6 @@ require 'fileutils'
 require 'flickraw'
 require 'flickr_auth.rb'
 
-auth = FlickrAuth.new('auth.yml')
-
 # quit unless our script gets two command line arguments
 unless ARGV.length == 2
   puts "Usage: ruby download_set.rb set_id directory"
@@ -15,6 +13,8 @@ set_id = ARGV[0]
 directory = ARGV[1]
 
 FileUtils.mkdir_p(directory)
+
+auth = FlickrAuth.new('auth.yml')
 
 photos = flickr.photosets.getPhotos(:photoset_id => set_id, :extras => 'url_o').photo
 puts "Downloading..."
