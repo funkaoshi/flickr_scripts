@@ -15,7 +15,7 @@
 #   MACHINE_TAG:roll=XX MACHINE_TAG:date="DATE" CAMERA FILM MACHINE_TAG:id=UNIQUE_ID
 
 require 'flickraw'
-require 'flickr_auth.rb'
+require_relative 'flickr_auth.rb'
 
 # Prefix for the machine tags generated. I use my username, funkaoshi
 MACHINE_TAG = 'funkaoshi'

@@ -1,7 +1,7 @@
 require 'net/http'
 require 'fileutils'
 require 'flickraw'
-require 'flickr_auth.rb'
+require_relative 'flickr_auth.rb'
 
 # quit unless our script gets two command line arguments
 unless ARGV.length == 2

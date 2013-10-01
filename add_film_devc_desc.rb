@@ -4,7 +4,7 @@
 # processed, or store the last update date locally.
 
 require 'flickraw'
-require 'flickr_auth.rb'
+require_relative 'flickr_auth.rb'
 
 # authorize with Flickr
 auth = FlickrAuth.new('auth.yml', 'write')

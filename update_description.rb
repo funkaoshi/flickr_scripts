@@ -1,5 +1,5 @@
 require 'flickraw'
-require 'flickr_auth.rb'
+require_relative 'flickr_auth.rb'
 
 # todo: read these from command line or something
 DESCRIPTION = 'DESCRIPTION'

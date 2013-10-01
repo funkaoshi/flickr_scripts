@@ -1,7 +1,7 @@
 require 'flickraw'
-require 'flickr_auth.rb'
+require_relative 'flickr_auth.rb'
 
-auth = FlickrAuth.new('gallery.yml')
+auth = FlickrAuth.new('auth.yml')
 
 gallery_map = {}
 contacts = flickr.contacts.getList
